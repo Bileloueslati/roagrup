@@ -13,7 +13,7 @@ class Theme
     {
         $this->addThemeSupport();
 
-        $this->addFilters();
+        $this->addActions();
 
         $this->addFilters();
     }
