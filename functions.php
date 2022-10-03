@@ -1,15 +1,29 @@
 <?php
 
-add_theme_support('post-thumbnails');
+$composer_autoload = __DIR__ . '/vendor/autoload.php';
 
-add_action('rest_api_init', function () {
-    remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
-}, 15);
+if (!file_exists($composer_autoload)) {
+    echo "Please run composer install to initialize autoload";
+    exit;
+}
 
-add_filter('rest_url', function ($url) {
-    return str_replace(home_url(), site_url(), $url);
-});
+require_once $composer_autoload;
+
+use App\Acf\Acf;
+use App\Theme\Requirements;
+use App\Theme\Theme;
+
+$theme = new Theme();
+
+$isSupported = Requirements::check();
+
+if (!$isSupported) {
+    echo "Please install required plugins first";
+    exit;
+}
+
+Acf::createOptionsPage();
+
+Acf::handleAcfApi();
 
 header("Access-Control-Allow-Origin: *");
-
-
